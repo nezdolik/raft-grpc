@@ -1,6 +1,10 @@
+#![deny(missing_docs)]
+//! crate docs
 use std::cmp::Ordering;
 use std::time::Instant;
 
+#[derive(Clone)]
+/// Constructs a ...
 pub struct Term {
     start: Instant,
     end:   Instant

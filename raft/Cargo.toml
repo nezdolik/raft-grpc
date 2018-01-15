@@ -1,0 +1,9 @@
+[package]
+name = "raft"
+version = "0.1.0"
+authors = ["Kateryna Nezdolii <nezdolik@spotify.com>"]
+
+[dependencies]
+log = "0.3.8"
+futures = "0.1.17"
+futures-await = "0.1"
