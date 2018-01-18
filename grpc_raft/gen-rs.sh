@@ -17,6 +17,6 @@ case "$protoc_ver" in
 esac
 
 protoc --rust_out=src raftmessaging.proto
-#protoc --rust-grpc_out=src raftmessaging.proto
+protoc --rust-grpc_out=src raftmessaging.proto
 
 # vim: set ts=4 sw=4 et:
