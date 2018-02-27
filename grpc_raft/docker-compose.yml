@@ -1,0 +1,27 @@
+version: '2'
+services:
+   raft-server:
+     hostname: raft-server
+     build:
+       context: .
+       dockerfile: Dockerfile
+     command: /bin/bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && cargo run --bin raft_grpc_server -- -p 50052"
+
+     ports:
+        #grpc
+        - 50052:50052
+
+   raft-client1:
+     hostname: raft-client1
+     build:
+        context: .
+        dockerfile: Dockerfile
+     command: /bin/bash -c "sleep 10 && echo ' -- Pausing to let system catch up ... -->' && cargo run --bin raft_grpc_client -- -l 99466 -p 50052"
+
+
+   raft-client2:
+     hostname: raft-client2
+     build:
+        context: .
+        dockerfile: Dockerfile
+     command: /bin/bash -c "sleep 20 && echo ' -- Pausing to let system catch up ... -->' && cargo run --bin raft_grpc_client -- -l 71234 -p 50052"

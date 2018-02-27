@@ -15,9 +15,14 @@ use std::thread;
 
 use structopt::StructOpt;
 
+const  DEFAULT_GRPC_PORT: u16 = 50051;
+
 #[derive(StructOpt, Debug)]
 #[structopt(name = "raftclient")]
 struct Opt {
+    /// Grpc port to bind to
+    #[structopt(short = "p", long = "grpcport")]
+    grpcport: Option<u16>,
     /// LeaderId for raft peer
     #[structopt(short = "lid", long = "leaderId")]
     leaderid: Option<u64>,
@@ -28,8 +33,9 @@ fn main() {
     let args = Opt::from_args();
     println!("{:?}", args);
     let leader_id = args.leaderid.unwrap_or(100);
+    let grpc_port = args.grpcport.unwrap_or(DEFAULT_GRPC_PORT);
 
-    let client = RaftMessengerClient::new_plain("localhost", 50052, Default::default()).unwrap();
+    let client = RaftMessengerClient::new_plain("localhost", grpc_port, Default::default()).unwrap();
 
     let executor = ThreadPoolExecutor::new(1).expect("Thread pool creation failed");;
 
