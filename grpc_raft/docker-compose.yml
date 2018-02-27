@@ -6,6 +6,9 @@ services:
        context: .
        dockerfile: Dockerfile
      command: /bin/bash -c "sleep 1 && echo ' -- Pausing to let system catch up ... -->' && cargo run --bin raft_grpc_server -- -p 50052"
+     networks:
+         grpcraft_default:
+             ipv4_address: 172.19.0.11
 
      ports:
         #grpc
@@ -25,3 +28,12 @@ services:
         context: .
         dockerfile: Dockerfile
      command: /bin/bash -c "sleep 20 && echo ' -- Pausing to let system catch up ... -->' && cargo run --bin raft_grpc_client -- -l 71234 -p 50052"
+
+
+networks:
+    grpcraft_default:
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.19.0.11/16
+              gateway:  172.19.0.13

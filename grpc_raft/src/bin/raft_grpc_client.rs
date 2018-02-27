@@ -35,7 +35,7 @@ fn main() {
     let leader_id = args.leaderid.unwrap_or(100);
     let grpc_port = args.grpcport.unwrap_or(DEFAULT_GRPC_PORT);
 
-    let client = RaftMessengerClient::new_plain("localhost", grpc_port, Default::default()).unwrap();
+    let client = RaftMessengerClient::new_plain("172.19.0.11", grpc_port, Default::default()).unwrap();
 
     let executor = ThreadPoolExecutor::new(1).expect("Thread pool creation failed");;
 
