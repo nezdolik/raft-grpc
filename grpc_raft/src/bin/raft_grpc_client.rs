@@ -1,19 +1,54 @@
 extern crate grpc_raft;
 extern crate grpc;
 extern crate futures;
+extern crate scheduled_executor;
+#[macro_use]
+extern crate structopt;
 
 use grpc_raft::raftmessaging_grpc::*;
 use grpc_raft::raftmessaging::*;
 
-use std::env;
+use scheduled_executor::ThreadPoolExecutor;
+
+use std::time::Duration;
+use std::thread;
+
+use structopt::StructOpt;
+
+#[derive(StructOpt, Debug)]
+#[structopt(name = "raftclient")]
+struct Opt {
+    /// LeaderId for raft peer
+    #[structopt(short = "lid", long = "leaderId")]
+    leaderid: Option<u64>,
+}
 
 fn main() {
-    let client = RaftMessengerClient::new_plain("localhost", 50051, Default::default()).unwrap();
 
-    let mut req = AppendEntriesRequest::new();
-    req.set_leaderId(100);
+    let args = Opt::from_args();
+    println!("{:?}", args);
+    let leader_id = args.leaderid.unwrap_or(100);
 
-    let resp = client.append_entries(grpc::RequestOptions::new(), req);
+    let client = RaftMessengerClient::new_plain("localhost", 50052, Default::default()).unwrap();
 
-    println!("{:?}", resp.wait());
+    let executor = ThreadPoolExecutor::new(1).expect("Thread pool creation failed");;
+
+    executor.schedule_fixed_rate(
+        Duration::from_secs(2),  // Wait 2 seconds before scheduling the first task
+        Duration::from_secs(10),  // and schedule every following task at 5 seconds intervals
+        move |_| {
+            let mut req = AppendEntriesRequest::new();
+            req.set_leaderId(leader_id);
+
+            let resp = client.append_entries(grpc::RequestOptions::new(), req);
+
+            println!("{:?}", resp.wait());
+        },
+    );
+
+    loop {
+        thread::park();
+    }
+
+
 }
