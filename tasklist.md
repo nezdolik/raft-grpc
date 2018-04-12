@@ -1,0 +1,5 @@
+- [ ] Refactor code into modules
+- [ ] Add noop transport
+- [ ] Run cluster in docker
+- [ ] Use node discovery mechanism on cluster startup
+- [ ] Implement election phase
