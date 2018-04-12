@@ -1,5 +1,6 @@
 - [ ] Refactor code into modules
 - [ ] Add noop transport
 - [ ] Run cluster in docker
+- [ ] Use docker image in compose file
 - [ ] Use node discovery mechanism on cluster startup
 - [ ] Implement election phase
